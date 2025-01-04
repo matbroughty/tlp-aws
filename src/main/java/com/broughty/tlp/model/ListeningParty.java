@@ -2,6 +2,10 @@ package com.broughty.tlp.model;
 
 import java.time.LocalDate;
 
+/**
+ * Listening party details from the listening party spreadsheet
+ * @see com.broughty.tlp.helper.ListeningPartyReader csv file
+ */
 public record ListeningParty(String date,
                              String band,
                              String album,
