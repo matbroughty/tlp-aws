@@ -1,3 +1,6 @@
+[![Java CI with Maven](https://github.com/matbroughty/tlp-aws/actions/workflows/maven.yml/badge.svg)](https://github.com/matbroughty/tlp-aws/actions/workflows/maven.yml)
+
+
 # Listening Party automated replays on bsky4j and X (fka twitter)
 
 Java lambda library to post to the [Bluesky](https://blueskyweb.xyz/)/ATProtocol API and to X.
