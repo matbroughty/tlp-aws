@@ -89,4 +89,36 @@ class ListeningPartyTest {
     }
 
 
+    @Test
+    public void testTweeterLinks(){
+
+        ListeningParty listeningParty = new ListeningParty(null, "The Charlatans", "Some Friendly",
+                "https://twitter.com/Tim_Burgess/status/1241686370789326849",
+                "https://open.spotify.com/album/0JWdN38GXUuoG3zHmXKmnj",
+                "@matbroughty:@jimbojones", "1", "https://open.spotify.com/album/0JWdN38GXUuoG3zHmXKmnj",
+                "https://open.spotify.com/album/0JWdN38GXUuoG3zHmXKmnj",
+                "https://open.spotify.com/album/0JWdN38GXUuoG3zHmXKmnj",
+                "1990-10-08", "1", "");
+
+        assertEquals("@matbroughty:@jimbojones", listeningParty.tweeters());
+        assertEquals("@matbroughty @jimbojones", listeningParty.tweeterLinkList());
+
+    }
+
+    @Test
+    public void testTweeterLinksEmpty(){
+
+        ListeningParty listeningParty = new ListeningParty(null, "The Charlatans", "Some Friendly",
+                "https://twitter.com/Tim_Burgess/status/1241686370789326849",
+                "https://open.spotify.com/album/0JWdN38GXUuoG3zHmXKmnj",
+                "", "1", "https://open.spotify.com/album/0JWdN38GXUuoG3zHmXKmnj",
+                "https://open.spotify.com/album/0JWdN38GXUuoG3zHmXKmnj",
+                "https://open.spotify.com/album/0JWdN38GXUuoG3zHmXKmnj",
+                "1990-10-08", "1", "");
+
+        assertEquals("", listeningParty.tweeters());
+        assertEquals("", listeningParty.tweeterLinkList());
+
+    }
+
 }

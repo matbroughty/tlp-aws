@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 /**
  * Listening party details from the listening party spreadsheet
+ *
  * @see com.broughty.tlp.helper.ListeningPartyReader csv file
  */
 public record ListeningParty(String date,
@@ -45,6 +46,17 @@ public record ListeningParty(String date,
             return false;
         }
         return date.getMonth().equals(LocalDate.now().getMonth()) && date.getDayOfMonth() == LocalDate.now().getDayOfMonth();
+    }
+
+    /**
+     * Takes a list of tweeters and returns a list of twitter links
+     */
+    public String tweeterLinkList() {
+        if (tweeters.isEmpty()) {
+            return "";
+        }
+        return String.join(" ", tweeters.split(":"));
+
     }
 
 }

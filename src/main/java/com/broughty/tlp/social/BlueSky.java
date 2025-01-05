@@ -14,7 +14,6 @@ import bsky4j.model.bsky.embed.EmbedExternal;
 import bsky4j.model.bsky.embed.EmbedExternalExternal;
 import com.broughty.tlp.model.ListeningParty;
 import com.broughty.tlp.model.SocialMediaPost;
-import com.broughty.tlp.model.SocialMediaType;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +33,7 @@ import java.util.Objects;
  * </ol>
  * returns a SocialMediaPost object with the details of the post.
  */
-public class BlueSky {
+public class BlueSky implements MediaPost {
 
 
     public SocialMediaPost postMessage(ListeningParty listeningParty) throws IOException, URISyntaxException {
@@ -102,7 +101,7 @@ public class BlueSky {
                                 .build()
                 );
 
-        var socialMediaPost = new SocialMediaPost(SocialMediaType.BLUE_SKY, listeningParty.listeningPartyNumber(),
+        var socialMediaPost = new SocialMediaPost(SocialMediaFactory.BLUESKY, listeningParty.listeningPartyNumber(),
                 responsePost.get().getCid(), responsePost.get().getUri());
         System.out.println("Posted message to Bluesky for " + listeningParty + " with response " + socialMediaPost);
         return socialMediaPost;

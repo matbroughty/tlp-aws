@@ -6,14 +6,18 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.broughty.tlp.helper.ListeningPartyReader;
 import com.broughty.tlp.model.ListeningParty;
 import com.broughty.tlp.model.SocialMediaPost;
-import com.broughty.tlp.model.SocialMediaType;
-import com.broughty.tlp.social.BlueSky;
+import com.broughty.tlp.social.SocialMediaFactory;
 import com.google.gson.Gson;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Handler for requests to Lambda function.
+ * Will find any listening parties that match today's date and post a message to all
+ * the configured social media platforms for each party
+ */
 @SuppressWarnings("unused")
 public class AnniversaryHandler implements RequestHandler<Object, String> {
 
@@ -28,26 +32,25 @@ public class AnniversaryHandler implements RequestHandler<Object, String> {
         var matches = listeningPartyList.stream().filter(ListeningParty::dateMatch).toList();
 
         logger.log("Found '" + matches.size() + "' anniversary listening parties for today " + LocalDate.now());
-        BlueSky blueSky = new BlueSky();
+        // for each matching party post a message to the social media platforms configured
         List<SocialMediaPost> messages = matches.stream()
                 .filter(lp -> lp.tweeters() != null && !lp.tweeters().isBlank()).map(lp -> {
-            SocialMediaPost message;
-            try {
-                message = blueSky.postMessage(lp);
-                logger.log("posted message = " + message);
-            } catch (Exception e) {
-                logger.log("Error posting message to Bluesky for party " + lp + " " + e.getMessage());
-                e.printStackTrace(System.err);
-                Arrays.stream(e.getStackTrace()).forEach(st -> logger.log(st.toString()));
-                message = new SocialMediaPost(SocialMediaType.BLUE_SKY, lp.listeningPartyNumber(), null, null);
-            }
-            return message;
-        }).toList();
-        logger.log("Posted '" + messages.size() + "' messages to Bluesky");
-
+                    return Arrays.stream(SocialMediaFactory.values()).map(sm -> {
+                        SocialMediaPost message;
+                        try {
+                            message = sm.getNewInstance().postMessage(lp);
+                            logger.log("posted message = " + message);
+                        } catch (Exception e) {
+                            logger.log("Error posting message to " + sm + " for party " + lp + " " + e.getMessage());
+                            e.printStackTrace(System.err);
+                            message = new SocialMediaPost(sm, lp.listeningPartyNumber(), e.getMessage(), null);
+                        }
+                        return message;
+                    }).toList();
+                }).flatMap(List::stream).toList();
+        logger.log("Posted '" + messages.size() + "' messages");
         Gson gson = new Gson();
         logger.log("Returned Output is: " + gson.toJson(messages));
-
         return gson.toJson(messages);
 
     }
