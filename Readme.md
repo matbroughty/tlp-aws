@@ -12,6 +12,9 @@ Posts to:
 * bluesky: https://bsky.app/profile/listeningparty.bsky.social
 * twitter (x): https://x.com/LlSTENlNG_PARTY
 
+And if configured will write results of any posting to AWS SNS.
+
+
 ## How to run
 
 This can all be run locally if AWS is configured on your machine.
@@ -33,6 +36,11 @@ Set the following environment variables for the Lambda:
   * twitter4j_oauth_consumerKey - the twitter access token
   * twitter4j_oauth_consumerSecret - the twitter access token secret
 
+Optionally if results of social messaging and required to be sent to AWS SNS
+
+* AWS_SNS_TOPIC_NAME - the SNS topic name - i.e. 
+  * arn:aws:sns:eu-west-2:343893643132:tlpanniversary
+
 The Lambda will then pick up the listening party data file and determine if a replay post is required.
 
 The [listening party data file (csv)](https://timstwitterlisteningparty.com/data/time-slot-data.csv) that drives the Lambda. 
@@ -53,6 +61,8 @@ The lambda will return every post as json with the following format:
 [{"socialMediaType":"BLUE_SKY","listeningNumber":"624","postId":"bafyreif75nwxdzz3rwozgzz74xqbqpxdz56b5khc4yotbansaqsu2jin4u","postUrl":"at://did:plc:455jef2gx3ntk6ouqos3d4x4/app.bsky.feed.post/3levy5vfbjo2p"}]
 ```
 
+If the AWS SNS topic is (env variable AWS_SNS_TOPIC_NAME ) set then the json will be sent to the topic.
+
 ## Libraries used
 
 
@@ -61,6 +71,7 @@ The lambda will return every post as json with the following format:
 * [Bluesky4j](https://github.com/uakihir0/bsky4j)
 * google/gson
 * twitter4j
+* sns-java-sdk
 
 ## TODO List
 
